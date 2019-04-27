@@ -15,7 +15,7 @@ public class NewsWdslService {
     static SoapObject soapObject;
     static SoapSerializationEnvelope soapSerializationEnvelope;
     static HttpTransportSE httpTransportSE;
-    static String WSDL_URL = "http://192.168.1.107:8080/denemeWebServisi/services/NewsService?wsdl";
+    static String WSDL_URL = "http://192.168.1.93:8080/denemeWebServisi/services/NewsService?wsdl";
 
     public static String increaseLike(String title) {
         return increase(title, "increaseLike");
