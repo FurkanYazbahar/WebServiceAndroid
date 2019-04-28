@@ -15,6 +15,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.haberservisi.haberservisi.dummy.NewsContent;
 
@@ -38,32 +39,25 @@ public class ItemListActivity extends AppCompatActivity {
     private static List<String>  titles    = new ArrayList<String>();
     private static List<News>    newsList  = new ArrayList<News>();
     private static List<String>  newsTypes = new ArrayList<String>();
-
+    static Context context;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        //HaberThread h = new HaberThread();
-        //h.start();
-
-  //      HaberThread hThreads = new HaberThread();
-
-//        hThreads.getTitlesStart("spor", "0", "5");
- //       News haber = new News();
-
-
-        // HaberTasks.getNews n = new  HaberTasks.getNews();
-
-        // Log.e("DENEME","elemen: " + newsList.get(0).getContent());
-        HaberTasks.getTitles tt = new HaberTasks.getTitles();
-        tt.execute("spor,ekonomi,siyaset,", "0", "15");
-
-        /*for (int i = 0; i < titles.size(); i++) {
-            Log.d("DENEME","elemen: " + titles.get(i));
-            //n.execute(titles.get(i));
-        }
-*/
         setContentView(R.layout.activity_item_list);
+        newsTypes  = HaberThread.getTypesStart();
+
+        String res  = newsTypes.get(0);
+
+        for(int i = 1; i < newsTypes.size(); i++){
+            res = res + ',' + newsTypes.get(i);
+        }
+
+        context = getApplicationContext();
+        titles  = HaberThread.getTitlesStart(res, "0", "1000");
+
+        for(int i = 0; i < titles.size(); i++){
+            newsList.add(HaberThread.getNewsStart(titles.get(i)));
+        }
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -72,16 +66,6 @@ public class ItemListActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-                HaberTasks.getNews nn = new HaberTasks.getNews();
-                for(int i = 0; i < titles.size(); i++){
-                    nn.execute(titles.get(i));
-                }
-
-
-                View recyclerView = findViewById(R.id.item_list);
-                assert recyclerView != null;
-                setupRecyclerView((RecyclerView) recyclerView);
                 // TODO: BURDA type ekleme eklenecek
                 Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
@@ -96,7 +80,9 @@ public class ItemListActivity extends AppCompatActivity {
             mTwoPane = true;
         }
 
-
+        View recyclerView = findViewById(R.id.item_list);
+        assert recyclerView != null;
+        setupRecyclerView((RecyclerView) recyclerView, newsList);
     }
 
     public static void onPostGetTitles(ArrayList<String> result)
@@ -118,8 +104,8 @@ public class ItemListActivity extends AppCompatActivity {
         newsList.add(result);
     }
 
-    private void setupRecyclerView(@NonNull RecyclerView recyclerView) {
-        recyclerView.setAdapter(new SimpleItemRecyclerViewAdapter(this, newsList, mTwoPane));
+    private void setupRecyclerView(@NonNull RecyclerView recyclerView, List<News> _newsList) {
+        recyclerView.setAdapter(new SimpleItemRecyclerViewAdapter(this, _newsList, mTwoPane));
     }
 
     public static class SimpleItemRecyclerViewAdapter
@@ -131,8 +117,12 @@ public class ItemListActivity extends AppCompatActivity {
         private final View.OnClickListener mOnClickListener = new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Toast.makeText(context,"basma ulan hödük",Toast.LENGTH_SHORT).show();
+                /*
                 News item = (News) view.getTag();
+
                 if (mTwoPane) {
+
                     Bundle arguments = new Bundle();
                     arguments.putString(ItemDetailFragment.ARG_ITEM_ID, String.valueOf(item.getId()));
                     ItemDetailFragment fragment = new ItemDetailFragment();
@@ -147,6 +137,9 @@ public class ItemListActivity extends AppCompatActivity {
 
                     context.startActivity(intent);
                 }
+
+                Log.e("DENEME", "cliked");
+                */
             }
         };
 
