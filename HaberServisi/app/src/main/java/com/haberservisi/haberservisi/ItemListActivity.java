@@ -25,7 +25,6 @@ import java.util.List;
 
 import static java.lang.Thread.sleep;
 
-
 public class ItemListActivity extends AppCompatActivity {
     private static List<String>  titles    = new ArrayList<String>();
     private static List<News>    newsList  = new ArrayList<News>();
@@ -101,16 +100,7 @@ public class ItemListActivity extends AppCompatActivity {
 
                 Context ctx = view.getContext();
                 Intent intent = new Intent(ctx, DetailPage.class);
-                intent.putExtra("id", news.getId());
                 intent.putExtra("title", news.getTitle());
-                intent.putExtra("content", news.getContent());
-                intent.putExtra("type", news.getType());
-                intent.putExtra("date", news.getDate());
-                intent.putExtra("like", news.getLike());
-                intent.putExtra("dislike", news.getDislike());
-                intent.putExtra("view", news.getView());
-                intent.putExtra("picture", news.getPicture());
-                intent.putExtra("pictureLink", news.getPictureLink());
                 ctx.startActivity(intent);
 
                 //intent.getStringExtra(

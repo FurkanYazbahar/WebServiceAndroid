@@ -149,8 +149,6 @@ public class NewsWdslService {
             SoapObject response = (SoapObject) soapSerializationEnvelope.getResponse();
 
             for(int i = 0; i < response.getPropertyCount(); i++){
-                //HaberTasks.getNews n = new HaberTasks.getNews();
-                //n.execute(titles.get(i));
                 titles.add(String.valueOf(response.getProperty(i)));
             }
 

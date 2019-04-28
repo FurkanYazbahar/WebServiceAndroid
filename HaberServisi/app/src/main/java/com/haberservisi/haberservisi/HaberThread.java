@@ -44,6 +44,28 @@ public class HaberThread {
         return titles;
     }
 
+    public static boolean increaseLike(String title){
+        Thread t = new Thread(new IncreaseLike(title));
+        try {
+            t.start();
+            t.join();
+        } catch( Exception e){
+            Log.e("DENEME", "getTitlesStart join hatası: " + e);
+        }
+        return true;
+    }
+
+    public static boolean increaseDislike(String title){
+        Thread t = new Thread(new IncreaseDislike(title));
+        try {
+            t.start();
+            t.join();
+        } catch( Exception e){
+            Log.e("DENEME", "getTitlesStart join hatası: " + e);
+        }
+        return true;
+    }
+
     static class GetTitles implements Runnable {
         private List<String>titles;
         String title, start_index, finish_index;
@@ -97,5 +119,27 @@ public class HaberThread {
             news.setPictureLink(n.getPictureLink());
         }
     }
+    static class IncreaseLike implements Runnable {
+        String title;
+        public IncreaseLike(String title){
+            this.title = title;
+        }
 
+        @Override
+        public void run() {
+            NewsWdslService.increaseLike(title);
+        }
+    }
+
+    static class IncreaseDislike implements Runnable {
+        String title;
+        public IncreaseDislike(String title){
+            this.title = title;
+        }
+
+        @Override
+        public void run() {
+            NewsWdslService.increaseDislike(title);
+        }
+    }
 }
