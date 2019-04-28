@@ -1,0 +1,393 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions targetNamespace="http://services" xmlns:apachesoap="http://xml.apache.org/xml-soap" xmlns:impl="http://services" xmlns:intf="http://services" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:tns1="http://model" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:wsdlsoap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+<!--WSDL created by Apache Axis version: 1.4
+Built on Apr 22, 2006 (06:55:48 PDT)-->
+ <wsdl:types>
+  <schema targetNamespace="http://xml.apache.org/xml-soap" xmlns="http://www.w3.org/2001/XMLSchema">
+   <import namespace="http://model"/>
+   <import namespace="http://schemas.xmlsoap.org/soap/encoding/"/>
+   <complexType name="Vector">
+    <sequence>
+     <element maxOccurs="unbounded" minOccurs="0" name="item" type="xsd:anyType"/>
+    </sequence>
+   </complexType>
+  </schema>
+  <schema targetNamespace="http://model" xmlns="http://www.w3.org/2001/XMLSchema">
+   <import namespace="http://xml.apache.org/xml-soap"/>
+   <import namespace="http://schemas.xmlsoap.org/soap/encoding/"/>
+   <complexType name="News">
+    <sequence>
+     <element name="content" nillable="true" type="xsd:string"/>
+     <element name="date" nillable="true" type="xsd:string"/>
+     <element name="dislike" type="xsd:int"/>
+     <element name="id" type="xsd:int"/>
+     <element name="like" type="xsd:int"/>
+     <element name="picture" nillable="true" type="xsd:base64Binary"/>
+     <element name="pictureLink" nillable="true" type="xsd:string"/>
+     <element name="title" nillable="true" type="xsd:string"/>
+     <element name="type" nillable="true" type="xsd:string"/>
+     <element name="view" type="xsd:int"/>
+    </sequence>
+   </complexType>
+  </schema>
+ </wsdl:types>
+
+   <wsdl:message name="increaseDislikeResponse">
+
+      <wsdl:part name="increaseDislikeReturn" type="xsd:boolean">
+
+      </wsdl:part>
+
+   </wsdl:message>
+
+   <wsdl:message name="getTitlesRequest">
+
+      <wsdl:part name="types" type="xsd:string">
+
+      </wsdl:part>
+
+      <wsdl:part name="start_index" type="xsd:int">
+
+      </wsdl:part>
+
+      <wsdl:part name="finish_index" type="xsd:int">
+
+      </wsdl:part>
+
+   </wsdl:message>
+
+   <wsdl:message name="increaseDislikeRequest">
+
+      <wsdl:part name="title" type="xsd:string">
+
+      </wsdl:part>
+
+   </wsdl:message>
+
+   <wsdl:message name="getNewsResponse">
+
+      <wsdl:part name="getNewsReturn" type="tns1:News">
+
+      </wsdl:part>
+
+   </wsdl:message>
+
+   <wsdl:message name="deleteRequest">
+
+      <wsdl:part name="title" type="xsd:string">
+
+      </wsdl:part>
+
+   </wsdl:message>
+
+   <wsdl:message name="insertNewsResponse">
+
+      <wsdl:part name="insertNewsReturn" type="xsd:boolean">
+
+      </wsdl:part>
+
+   </wsdl:message>
+
+   <wsdl:message name="increaseLikeRequest">
+
+      <wsdl:part name="title" type="xsd:string">
+
+      </wsdl:part>
+
+   </wsdl:message>
+
+   <wsdl:message name="deleteResponse">
+
+      <wsdl:part name="deleteReturn" type="xsd:boolean">
+
+      </wsdl:part>
+
+   </wsdl:message>
+
+   <wsdl:message name="getTypesRequest">
+
+   </wsdl:message>
+
+   <wsdl:message name="getNewsRequest">
+
+      <wsdl:part name="title" type="xsd:string">
+
+      </wsdl:part>
+
+   </wsdl:message>
+
+   <wsdl:message name="insertNewsRequest">
+
+      <wsdl:part name="title" type="xsd:string">
+
+      </wsdl:part>
+
+      <wsdl:part name="content" type="xsd:string">
+
+      </wsdl:part>
+
+      <wsdl:part name="type" type="xsd:string">
+
+      </wsdl:part>
+
+      <wsdl:part name="urlLink" type="xsd:string">
+
+      </wsdl:part>
+
+   </wsdl:message>
+
+   <wsdl:message name="getTitlesResponse">
+
+      <wsdl:part name="getTitlesReturn" type="apachesoap:Vector">
+
+      </wsdl:part>
+
+   </wsdl:message>
+
+   <wsdl:message name="getTypesResponse">
+
+      <wsdl:part name="getTypesReturn" type="apachesoap:Vector">
+
+      </wsdl:part>
+
+   </wsdl:message>
+
+   <wsdl:message name="increaseLikeResponse">
+
+      <wsdl:part name="increaseLikeReturn" type="xsd:boolean">
+
+      </wsdl:part>
+
+   </wsdl:message>
+
+   <wsdl:portType name="NewsService">
+
+      <wsdl:operation name="delete" parameterOrder="title">
+
+         <wsdl:input message="impl:deleteRequest" name="deleteRequest">
+
+       </wsdl:input>
+
+         <wsdl:output message="impl:deleteResponse" name="deleteResponse">
+
+       </wsdl:output>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="getTypes">
+
+         <wsdl:input message="impl:getTypesRequest" name="getTypesRequest">
+
+       </wsdl:input>
+
+         <wsdl:output message="impl:getTypesResponse" name="getTypesResponse">
+
+       </wsdl:output>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="insertNews" parameterOrder="title content type urlLink">
+
+         <wsdl:input message="impl:insertNewsRequest" name="insertNewsRequest">
+
+       </wsdl:input>
+
+         <wsdl:output message="impl:insertNewsResponse" name="insertNewsResponse">
+
+       </wsdl:output>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="getTitles" parameterOrder="types start_index finish_index">
+
+         <wsdl:input message="impl:getTitlesRequest" name="getTitlesRequest">
+
+       </wsdl:input>
+
+         <wsdl:output message="impl:getTitlesResponse" name="getTitlesResponse">
+
+       </wsdl:output>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="increaseDislike" parameterOrder="title">
+
+         <wsdl:input message="impl:increaseDislikeRequest" name="increaseDislikeRequest">
+
+       </wsdl:input>
+
+         <wsdl:output message="impl:increaseDislikeResponse" name="increaseDislikeResponse">
+
+       </wsdl:output>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="increaseLike" parameterOrder="title">
+
+         <wsdl:input message="impl:increaseLikeRequest" name="increaseLikeRequest">
+
+       </wsdl:input>
+
+         <wsdl:output message="impl:increaseLikeResponse" name="increaseLikeResponse">
+
+       </wsdl:output>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="getNews" parameterOrder="title">
+
+         <wsdl:input message="impl:getNewsRequest" name="getNewsRequest">
+
+       </wsdl:input>
+
+         <wsdl:output message="impl:getNewsResponse" name="getNewsResponse">
+
+       </wsdl:output>
+
+      </wsdl:operation>
+
+   </wsdl:portType>
+
+   <wsdl:binding name="NewsServiceSoapBinding" type="impl:NewsService">
+
+      <wsdlsoap:binding style="rpc" transport="http://schemas.xmlsoap.org/soap/http"/>
+
+      <wsdl:operation name="delete">
+
+         <wsdlsoap:operation soapAction=""/>
+
+         <wsdl:input name="deleteRequest">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://services" use="encoded"/>
+
+         </wsdl:input>
+
+         <wsdl:output name="deleteResponse">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://services" use="encoded"/>
+
+         </wsdl:output>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="getTypes">
+
+         <wsdlsoap:operation soapAction=""/>
+
+         <wsdl:input name="getTypesRequest">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://services" use="encoded"/>
+
+         </wsdl:input>
+
+         <wsdl:output name="getTypesResponse">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://services" use="encoded"/>
+
+         </wsdl:output>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="insertNews">
+
+         <wsdlsoap:operation soapAction=""/>
+
+         <wsdl:input name="insertNewsRequest">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://services" use="encoded"/>
+
+         </wsdl:input>
+
+         <wsdl:output name="insertNewsResponse">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://services" use="encoded"/>
+
+         </wsdl:output>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="getTitles">
+
+         <wsdlsoap:operation soapAction=""/>
+
+         <wsdl:input name="getTitlesRequest">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://services" use="encoded"/>
+
+         </wsdl:input>
+
+         <wsdl:output name="getTitlesResponse">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://services" use="encoded"/>
+
+         </wsdl:output>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="increaseDislike">
+
+         <wsdlsoap:operation soapAction=""/>
+
+         <wsdl:input name="increaseDislikeRequest">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://services" use="encoded"/>
+
+         </wsdl:input>
+
+         <wsdl:output name="increaseDislikeResponse">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://services" use="encoded"/>
+
+         </wsdl:output>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="increaseLike">
+
+         <wsdlsoap:operation soapAction=""/>
+
+         <wsdl:input name="increaseLikeRequest">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://services" use="encoded"/>
+
+         </wsdl:input>
+
+         <wsdl:output name="increaseLikeResponse">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://services" use="encoded"/>
+
+         </wsdl:output>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="getNews">
+
+         <wsdlsoap:operation soapAction=""/>
+
+         <wsdl:input name="getNewsRequest">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://services" use="encoded"/>
+
+         </wsdl:input>
+
+         <wsdl:output name="getNewsResponse">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://services" use="encoded"/>
+
+         </wsdl:output>
+
+      </wsdl:operation>
+
+   </wsdl:binding>
+
+   <wsdl:service name="NewsServiceService">
+
+      <wsdl:port binding="impl:NewsServiceSoapBinding" name="NewsService">
+
+         <wsdlsoap:address location="http://localhost:8080/denemeWebServisi/services/NewsService"/>
+
+      </wsdl:port>
+
+   </wsdl:service>
+
+</wsdl:definitions>

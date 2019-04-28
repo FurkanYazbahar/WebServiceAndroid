@@ -1,0 +1,59 @@
+<!-- Use this file to deploy some handlers/chains and services      -->
+<!-- Two ways to do this:                                           -->
+<!--   java org.apache.axis.client.AdminClient deploy.wsdd          -->
+<!--      after the axis server is running                          -->
+<!-- or                                                             -->
+<!--   java org.apache.axis.utils.Admin client|server deploy.wsdd   -->
+<!--      from the same directory that the Axis engine runs         -->
+
+<deployment
+    xmlns="http://xml.apache.org/axis/wsdd/"
+    xmlns:java="http://xml.apache.org/axis/wsdd/providers/java">
+
+  <!-- Services from NewsServiceService WSDL service -->
+
+  <service name="NewsService" provider="java:RPC" style="rpc" use="encoded">
+      <parameter name="wsdlTargetNamespace" value="http://services"/>
+      <parameter name="wsdlServiceElement" value="NewsServiceService"/>
+      <parameter name="schemaUnqualified" value="http://model,http://xml.apache.org/xml-soap"/>
+      <parameter name="wsdlServicePort" value="NewsService"/>
+      <parameter name="className" value="services.NewsServiceSoapBindingImpl"/>
+      <parameter name="wsdlPortType" value="NewsService"/>
+      <parameter name="typeMappingVersion" value="1.2"/>
+      <operation name="delete" qname="operNS:delete" xmlns:operNS="http://services" returnQName="deleteReturn" returnType="rtns:boolean" xmlns:rtns="http://www.w3.org/2001/XMLSchema" soapAction="" >
+        <parameter qname="title" type="tns:string" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+      </operation>
+      <operation name="getTypes" qname="operNS:getTypes" xmlns:operNS="http://services" returnQName="getTypesReturn" returnType="rtns:Vector" xmlns:rtns="http://xml.apache.org/xml-soap" soapAction="" >
+      </operation>
+      <operation name="insertNews" qname="operNS:insertNews" xmlns:operNS="http://services" returnQName="insertNewsReturn" returnType="rtns:boolean" xmlns:rtns="http://www.w3.org/2001/XMLSchema" soapAction="" >
+        <parameter qname="title" type="tns:string" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+        <parameter qname="content" type="tns:string" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+        <parameter qname="type" type="tns:string" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+        <parameter qname="urlLink" type="tns:string" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+      </operation>
+      <operation name="getTitles" qname="operNS:getTitles" xmlns:operNS="http://services" returnQName="getTitlesReturn" returnType="rtns:Vector" xmlns:rtns="http://xml.apache.org/xml-soap" soapAction="" >
+        <parameter qname="types" type="tns:string" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+        <parameter qname="start_index" type="tns:int" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+        <parameter qname="finish_index" type="tns:int" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+      </operation>
+      <operation name="increaseDislike" qname="operNS:increaseDislike" xmlns:operNS="http://services" returnQName="increaseDislikeReturn" returnType="rtns:boolean" xmlns:rtns="http://www.w3.org/2001/XMLSchema" soapAction="" >
+        <parameter qname="title" type="tns:string" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+      </operation>
+      <operation name="increaseLike" qname="operNS:increaseLike" xmlns:operNS="http://services" returnQName="increaseLikeReturn" returnType="rtns:boolean" xmlns:rtns="http://www.w3.org/2001/XMLSchema" soapAction="" >
+        <parameter qname="title" type="tns:string" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+      </operation>
+      <operation name="getNews" qname="operNS:getNews" xmlns:operNS="http://services" returnQName="getNewsReturn" returnType="rtns:News" xmlns:rtns="http://model" soapAction="" >
+        <parameter qname="title" type="tns:string" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+      </operation>
+      <parameter name="allowedMethods" value="increaseDislike getTitles getTypes getNews increaseLike delete insertNews"/>
+
+      <typeMapping
+        xmlns:ns="http://model"
+        qname="ns:News"
+        type="java:model.News"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"
+      />
+  </service>
+</deployment>
