@@ -2,7 +2,8 @@ package com.haberservisi.haberservisi;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -14,40 +15,30 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.haberservisi.haberservisi.dummy.NewsContent;
-
+import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 import static java.lang.Thread.sleep;
 
-/**
- * An activity representing a list of Items. This activity
- * has different presentations for handset and tablet-size devices. On
- * handsets, the activity presents a list of items, which when touched,
- * lead to a {@link ItemDetailActivity} representing
- * item details. On tablets, the activity presents the list of items and
- * item details side-by-side using two vertical panes.
- */
-public class ItemListActivity extends AppCompatActivity {
-    private boolean mTwoPane;
 
+public class ItemListActivity extends AppCompatActivity {
     private static List<String>  titles    = new ArrayList<String>();
     private static List<News>    newsList  = new ArrayList<News>();
     private static List<String>  newsTypes = new ArrayList<String>();
     static Context context;
     @Override
+
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_item_list);
         newsTypes  = HaberThread.getTypesStart();
 
         String res  = newsTypes.get(0);
-
         for(int i = 1; i < newsTypes.size(); i++){
             res = res + ',' + newsTypes.get(i);
         }
@@ -59,10 +50,11 @@ public class ItemListActivity extends AppCompatActivity {
             newsList.add(HaberThread.getNewsStart(titles.get(i)));
         }
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar =  findViewById(R.id.toolbar);
+        FloatingActionButton fab = findViewById(R.id.fab);
         setSupportActionBar(toolbar);
         toolbar.setTitle(getTitle());
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -72,14 +64,6 @@ public class ItemListActivity extends AppCompatActivity {
             }
         });
 
-        if (findViewById(R.id.item_detail_container) != null) {
-            // The detail container view will be present only in the
-            // large-screen layouts (res/values-w900dp).
-            // If this view is present, then the
-            // activity should be in two-pane mode.
-            mTwoPane = true;
-        }
-
         View recyclerView = findViewById(R.id.item_list);
         assert recyclerView != null;
         setupRecyclerView((RecyclerView) recyclerView, newsList);
@@ -88,7 +72,7 @@ public class ItemListActivity extends AppCompatActivity {
     public static void onPostGetTitles(ArrayList<String> result)
     {
         titles = result;
-        Log.d("DENEME", "onPostGet Titles response: " + titles.size() );
+        Log.d("DENEME", "onPostGet Titles response: " + titles.size());
     }
 
     public static void onPostGetTypes(ArrayList<String> result)
@@ -98,69 +82,59 @@ public class ItemListActivity extends AppCompatActivity {
         //TODO: add in shared preference
     }
 
-    public static void onPostGetNews(News result)
-    {
-        Log.d("DENEME", "onPostGet Titles response: " + result.getContent() );
-        newsList.add(result);
-    }
-
     private void setupRecyclerView(@NonNull RecyclerView recyclerView, List<News> _newsList) {
-        recyclerView.setAdapter(new SimpleItemRecyclerViewAdapter(this, _newsList, mTwoPane));
+        recyclerView.setAdapter(new SimpleItemRecyclerViewAdapter(_newsList));
     }
 
     public static class SimpleItemRecyclerViewAdapter
             extends RecyclerView.Adapter<SimpleItemRecyclerViewAdapter.ViewHolder> {
 
-        private final ItemListActivity mParentActivity;
         private final List<News> mValues;
-        private final boolean mTwoPane;
         private final View.OnClickListener mOnClickListener = new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(context,"basma ulan hödük",Toast.LENGTH_SHORT).show();
-                /*
-                News item = (News) view.getTag();
+                Toast.makeText(context,"Clicked()",Toast.LENGTH_SHORT).show();
 
-                if (mTwoPane) {
+                News news = (News) view.getTag();
 
-                    Bundle arguments = new Bundle();
-                    arguments.putString(ItemDetailFragment.ARG_ITEM_ID, String.valueOf(item.getId()));
-                    ItemDetailFragment fragment = new ItemDetailFragment();
-                    fragment.setArguments(arguments);
-                    mParentActivity.getSupportFragmentManager().beginTransaction()
-                            .replace(R.id.item_detail_container, fragment)
-                            .commit();
-                } else {
-                    Context context = view.getContext();
-                    Intent intent = new Intent(context, ItemDetailActivity.class);
-                    intent.putExtra(ItemDetailFragment.ARG_ITEM_ID, String.valueOf(item.getId()));
+                Log.e("DENEME", "onClick(): " + news.getTitle());
 
-                    context.startActivity(intent);
-                }
+                Context ctx = view.getContext();
+                Intent intent = new Intent(ctx, DetailPage.class);
+                intent.putExtra("id", news.getId());
+                intent.putExtra("title", news.getTitle());
+                intent.putExtra("content", news.getContent());
+                intent.putExtra("type", news.getType());
+                intent.putExtra("date", news.getDate());
+                intent.putExtra("like", news.getLike());
+                intent.putExtra("dislike", news.getDislike());
+                intent.putExtra("view", news.getView());
+                intent.putExtra("picture", news.getPicture());
+                intent.putExtra("pictureLink", news.getPictureLink());
+                ctx.startActivity(intent);
 
-                Log.e("DENEME", "cliked");
-                */
+                //intent.getStringExtra(
+
+                Log.e("DENEME", "clicked!");
             }
         };
 
-        SimpleItemRecyclerViewAdapter(ItemListActivity parent,
-                                      List<News> items,
-                                      boolean twoPane) {
+        SimpleItemRecyclerViewAdapter(List<News> items) {
             mValues = items;
-            mParentActivity = parent;
-            mTwoPane = twoPane;
         }
 
         @Override
-        public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
             View view = LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.item_list_content, parent, false);
-            return new ViewHolder(view);
+            //return new ViewHolder(mImage, view);
+            return new ViewHolder(null, view);
         }
 
         @Override
-        public void onBindViewHolder(final ViewHolder holder, int position) {
-            holder.mIdView.setText(String.valueOf(mValues.get(position).getId()));
+        public void onBindViewHolder(@NonNull final ViewHolder holder, int position) {
+
+            holder.mIdView.setText(String.valueOf(mValues.get(position).getTitle()));
             holder.mContentView.setText(mValues.get(position).getContent());
 
             holder.itemView.setTag(mValues.get(position));
@@ -173,13 +147,15 @@ public class ItemListActivity extends AppCompatActivity {
         }
 
         class ViewHolder extends RecyclerView.ViewHolder {
-            final TextView mIdView;
-            final TextView mContentView;
+            final ImageView mImage;
+            final TextView  mIdView;
+            final TextView  mContentView;
 
-            ViewHolder(View view) {
+            ViewHolder(ImageView mImage, View view) {
                 super(view);
-                mIdView      = (TextView) view.findViewById(R.id.id_text);
-                mContentView = (TextView) view.findViewById(R.id.content);
+                this.mImage       = view.findViewById(R.id.image);
+                this.mIdView      = view.findViewById(R.id.id_text);
+                this.mContentView = view.findViewById(R.id.content);
             }
         }
     }
