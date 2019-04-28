@@ -1,5 +1,7 @@
 package com.haberservisi.haberservisi;
 
+import android.util.Base64;
+
 public class News {
     private int    id           = 0;
     private String title        = null;

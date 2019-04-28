@@ -92,20 +92,12 @@ public class ItemListActivity extends AppCompatActivity {
         private final View.OnClickListener mOnClickListener = new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(context,"Clicked()",Toast.LENGTH_SHORT).show();
-
                 News news = (News) view.getTag();
-
-                Log.e("DENEME", "onClick(): " + news.getTitle());
 
                 Context ctx = view.getContext();
                 Intent intent = new Intent(ctx, DetailPage.class);
                 intent.putExtra("title", news.getTitle());
                 ctx.startActivity(intent);
-
-                //intent.getStringExtra(
-
-                Log.e("DENEME", "clicked!");
             }
         };
 
@@ -124,8 +116,8 @@ public class ItemListActivity extends AppCompatActivity {
         @Override
         public void onBindViewHolder(@NonNull final ViewHolder holder, int position) {
 
-            holder.mIdView.setText(String.valueOf(mValues.get(position).getTitle()));
-            holder.mContentView.setText(mValues.get(position).getContent());
+            holder.mIdView.setText(String.valueOf(mValues.get(position).getDate()));
+            holder.mContentView.setText(mValues.get(position).getTitle());
 
             holder.itemView.setTag(mValues.get(position));
             holder.itemView.setOnClickListener(mOnClickListener);

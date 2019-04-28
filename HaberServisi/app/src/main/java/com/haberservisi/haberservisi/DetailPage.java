@@ -1,15 +1,20 @@
 package com.haberservisi.haberservisi;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.method.ScrollingMovementMethod;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import java.util.Base64;
 
 public class DetailPage extends AppCompatActivity {
     ImageView imageview;
@@ -24,7 +29,7 @@ public class DetailPage extends AppCompatActivity {
         setGUI();
 
         News news = HaberThread.getNewsStart(getIntent().getStringExtra("title"));
-
+        NewsWdslService.increaseView(news.getTitle());
         like.setText(String.valueOf(news.getLike()));
         dislike.setText(String.valueOf(news.getDislike()));
         newsTitle.setText(news.getTitle());
@@ -35,8 +40,32 @@ public class DetailPage extends AppCompatActivity {
         newsText.append("Görüntüleme Sayısı: ");
         newsText.append(String.valueOf(news.getView()));
         newsText.append("\n");
-
         newsText.append(news.getContent());
+
+        try{
+            Log.e("DENEME", "Bitmap: " + news.getPicture().length);
+            Bitmap bm = BitmapFactory.decodeByteArray(news.getPicture(), 0, news.getPicture().length);
+            imageview.setImageBitmap(bm);
+
+            //String decoded = new String(Base64.getDecoder().decode(news.getPicture()));
+/*
+            byte[] arr  = Base64.getDecoder().decode(news.getPicture());
+//            Bitmap bm = BitmapFactory.decodeByteArray(news.getPicture(), 0, news.getPicture().length);
+*/
+        } catch(Exception e){
+            Log.e("DENEME", "Bitmap hatası! " + e);
+        }
+/*
+        Bitmap bm = BitmapFactory.decodeByteArray(news.getPicture(), 0, news.getPicture().length);
+        Log.e("DENEME", "dıbıtıs");
+        /*
+        DisplayMetrics dm = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(dm);
+/*
+        imageview.setMinimumHeight(dm.heightPixels);
+        imageview.setMinimumWidth(dm.widthPixels);
+        imageview.setImageBitmap(bm);
+//*/
 
         like.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -58,7 +87,7 @@ public class DetailPage extends AppCompatActivity {
     }
 
     private void setGUI(){
-        imageview = findViewById(R.id.NewsImage);
+        imageview = findViewById(R.id.newsImage);
         like      = findViewById(R.id.like);
         dislike   = findViewById(R.id.dislike);
         newsText  = findViewById(R.id.newsText);

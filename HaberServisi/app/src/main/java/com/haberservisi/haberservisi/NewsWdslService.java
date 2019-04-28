@@ -9,6 +9,8 @@ import org.ksoap2.serialization.SoapSerializationEnvelope;
 import org.ksoap2.transport.HttpTransportSE;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Base64;
 import java.util.List;
 
 public class NewsWdslService {
@@ -16,6 +18,10 @@ public class NewsWdslService {
     static SoapSerializationEnvelope soapSerializationEnvelope;
     static HttpTransportSE httpTransportSE;
     static String WSDL_URL = "http://192.168.1.93:8080/denemeWebServisi/services/NewsService?wsdl";
+
+    public static String increaseView(String title) {
+        return increase(title, "increaseView");
+    }
 
     public static String increaseLike(String title) {
         return increase(title, "increaseLike");
@@ -82,15 +88,21 @@ public class NewsWdslService {
             news.setLike   (Integer.valueOf(String.valueOf(response.getProperty("like"))));
             news.setDislike(Integer.valueOf(String.valueOf(response.getProperty("dislike"))));
             news.setView   (Integer.valueOf(String.valueOf(response.getProperty("view"))));
+            news.setPictureLink(String.valueOf(response.getProperty("pictureLink")));
 
-            if(response.getProperty("picture") != null)
-                news.setPicture((byte[])response.getProperty("picture"));
+            try{
+                SoapPrimitive p = (SoapPrimitive) response.getProperty("picture");
+                String picture = p.toString();
 
-            if(response.getProperty("picture") != null)
-                news.setPictureLink(String.valueOf(response.getProperty("pictureLink")));
+                Log.e("DENEME", news.getTitle() + " resim boyutu : " + picture.length());
+                //Base64.getEncoder().encode(news.getPicture());
+                news.setPicture(picture.getBytes());
+            } catch(Exception e){
+                Log.e("DENEME", "bitmap için resim okunamadı!");
+            }
 
         } catch (Exception ex) {
-            Log.e("NewsWdslService", "Error: " + ex);
+            Log.e("DENEME", "Error: " + ex);
             ex.printStackTrace();
         }
         return news;
